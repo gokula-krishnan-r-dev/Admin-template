@@ -14,7 +14,6 @@ export default async function RootLayout({
       <body className={`${inter.className} overflow-hidden`}>
         <Providers>
           <Toaster />
-
           {children}
         </Providers>
       </body>
