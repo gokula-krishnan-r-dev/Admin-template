@@ -22,7 +22,7 @@ type paramsProps = {
   };
 };
 
-export default function page({ searchParams }: paramsProps) {
+export default function Page({ searchParams }: paramsProps) {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const { data, isLoading, isError, refetch } = useQuery("page", async () => {

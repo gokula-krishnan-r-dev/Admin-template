@@ -5,13 +5,9 @@ import {
   BookingColumns,
   columns,
 } from "@/components/tables/user-tables/columns";
-import { buttonVariants } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import axios from "@/lib/axios";
-import { cn } from "@/lib/utils";
-import { Plus } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
@@ -25,7 +21,7 @@ type paramsProps = {
   };
 };
 
-export default function page({ searchParams }: paramsProps) {
+export default function Page({ searchParams }: paramsProps) {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const { data, isLoading, isError, refetch } = useQuery("page", async () => {
