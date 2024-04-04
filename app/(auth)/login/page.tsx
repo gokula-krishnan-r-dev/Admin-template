@@ -33,7 +33,7 @@ const LoginPage = () => {
   const router = useRouter();
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const response = await fetch("http://64.227.159.232/api/v1/admin/login", {
+      const response = await fetch(`http://139.59.91.252/api/v1/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,6 +49,7 @@ const LoginPage = () => {
 
       if (data.status === "Success") {
         toast.success("Login successful");
+        localStorage.setItem("jwt", data.data.authToken);
         router.push("/dashboard");
       } else {
         toast.error("Login failed. Try again.");

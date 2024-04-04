@@ -43,6 +43,8 @@ interface DataTableProps<TData, TValue> {
   totalUsers: number;
   pageSizeOptions?: number[];
   pageCount: number;
+  setPage: (page: number) => void;
+  setLimit: (limit: number) => void;
   searchParams?: {
     [key: string]: string | string[] | undefined;
   };
@@ -55,7 +57,9 @@ export function EmployeeTable<TData, TValue>({
   searchKey,
   totalUsers,
   pageCount,
-  pageSizeOptions = [10, 20, 30, 40, 50],
+  setPage,
+  setLimit,
+  pageSizeOptions = [5, 10, 20, 30, 40, 50],
 }: DataTableProps<TData, TValue>) {
   const router = useRouter();
   const pathname = usePathname();
@@ -107,7 +111,8 @@ export function EmployeeTable<TData, TValue>({
         scroll: false,
       },
     );
-
+    setLimit(pageSize);
+    setPage(pageIndex + 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageIndex, pageSize]);
 
@@ -217,7 +222,8 @@ export function EmployeeTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table?.getRowModel()?.rows &&
+            table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -283,24 +289,17 @@ export function EmployeeTable<TData, TValue>({
         </div>
         <div className="flex items-center justify-between sm:justify-end gap-2 w-full">
           <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
+            Page {pageNo} of {Math.ceil(totalUsers / pageSize)}
           </div>
           <div className="flex items-center space-x-2">
-            <Button
-              aria-label="Go to first page"
-              variant="outline"
-              className="hidden h-8 w-8 p-0 lg:flex"
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <DoubleArrowLeftIcon className="h-4 w-4" aria-hidden="true" />
-            </Button>
             <Button
               aria-label="Go to previous page"
               variant="outline"
               className="h-8 w-8 p-0"
-              onClick={() => table.previousPage()}
+              onClick={() => {
+                table.previousPage();
+                // setPage(table.getState().pagination.pageIndex + 1);
+              }}
               disabled={!table.getCanPreviousPage()}
             >
               <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />
@@ -309,19 +308,13 @@ export function EmployeeTable<TData, TValue>({
               aria-label="Go to next page"
               variant="outline"
               className="h-8 w-8 p-0"
-              onClick={() => table.nextPage()}
+              onClick={() => {
+                table.nextPage();
+                // setPage(table.getState().pagination.pageIndex + 1);
+              }}
               disabled={!table.getCanNextPage()}
             >
               <ChevronRightIcon className="h-4 w-4" aria-hidden="true" />
-            </Button>
-            <Button
-              aria-label="Go to last page"
-              variant="outline"
-              className="hidden h-8 w-8 p-0 lg:flex"
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
-            >
-              <DoubleArrowRightIcon className="h-4 w-4" aria-hidden="true" />
             </Button>
           </div>
         </div>

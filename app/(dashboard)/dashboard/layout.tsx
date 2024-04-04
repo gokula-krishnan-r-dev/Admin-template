@@ -1,8 +1,6 @@
 "use client";
-
 import Header from "@/components/layout/header";
 import Sidebar from "@/components/layout/sidebar";
-
 import { QueryClient, QueryClientProvider } from "react-query";
 
 export default function DashboardLayout({
@@ -11,6 +9,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const queryClient = new QueryClient();
+
   return (
     <>
       <Header />
