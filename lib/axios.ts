@@ -6,7 +6,7 @@ import Axios from "axios";
 const isServerSide = typeof window === "undefined";
 
 const axios = Axios.create({
-  baseURL: "http://139.59.91.252/api/v1/admin",
+  baseURL: "http://139.59.91.252/api/v1",
   // withCredentials: true,
 });
 

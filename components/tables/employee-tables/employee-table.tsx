@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import {
   ColumnDef,
   PaginationState,
@@ -8,7 +9,6 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,13 +27,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
-} from "@radix-ui/react-icons";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import dynamic from "next/dynamic";
+const DialogDetails = dynamic(() => import("./details.model"));
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -48,6 +46,8 @@ interface DataTableProps<TData, TValue> {
   searchParams?: {
     [key: string]: string | string[] | undefined;
   };
+  filter?: any;
+  setSearch: any;
 }
 
 export function EmployeeTable<TData, TValue>({
@@ -59,6 +59,8 @@ export function EmployeeTable<TData, TValue>({
   pageCount,
   setPage,
   setLimit,
+  filter,
+  setSearch,
   pageSizeOptions = [5, 10, 20, 30, 40, 50],
 }: DataTableProps<TData, TValue>) {
   const router = useRouter();
@@ -133,33 +135,6 @@ export function EmployeeTable<TData, TValue>({
 
   const searchValue = table.getColumn(searchKey)?.getFilterValue() as string;
 
-  // React.useEffect(() => {
-  //   if (debounceValue.length > 0) {
-  //     router.push(
-  //       `${pathname}?${createQueryString({
-  //         [selectedOption.value]: `${debounceValue}${
-  //           debounceValue.length > 0 ? `.${filterVariety}` : ""
-  //         }`,
-  //       })}`,
-  //       {
-  //         scroll: false,
-  //       }
-  //     )
-  //   }
-
-  //   if (debounceValue.length === 0) {
-  //     router.push(
-  //       `${pathname}?${createQueryString({
-  //         [selectedOption.value]: null,
-  //       })}`,
-  //       {
-  //         scroll: false,
-  //       }
-  //     )
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [debounceValue, filterVariety, selectedOption.value])
-
   React.useEffect(() => {
     if (searchValue?.length > 0) {
       router.push(
@@ -193,14 +168,14 @@ export function EmployeeTable<TData, TValue>({
 
   return (
     <>
-      <Input
-        placeholder={`Search ${searchKey}...`}
-        value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
-        onChange={(event) =>
-          table.getColumn(searchKey)?.setFilterValue(event.target.value)
-        }
-        className="w-full md:max-w-sm"
-      />
+      <div className="flex items-center flex-wrap justify-between">
+        <Input
+          placeholder={`Search ${searchKey}...`}
+          onChange={(event) => setSearch(event.target.value)}
+          className="w-full md:max-w-sm"
+        />
+        {filter}
+      </div>
       <ScrollArea className="rounded-md border h-[calc(80vh-220px)]">
         <Table className="relative">
           <TableHeader>
@@ -231,10 +206,12 @@ export function EmployeeTable<TData, TValue>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <DialogDetails row={row?.original}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </DialogDetails>
                     </TableCell>
                   ))}
                 </TableRow>

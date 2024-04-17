@@ -26,11 +26,14 @@ type paramsProps = {
 export default function Page({ searchParams }: paramsProps) {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [search, setSearch] = useState<string | undefined>();
   const { data, isLoading, isError, refetch } = useQuery(
     ["customer", page], // Use page as part of the query key
     async () => {
       const { data } = await axios.get(
-        `/customer?page_number=${page}&page_size=${limit}`,
+        `/admin/customer?page_number=${page}&page_size=${limit}&${
+          search && `search_key=${search}`
+        }`,
       );
       return data.data;
     },
@@ -39,7 +42,7 @@ export default function Page({ searchParams }: paramsProps) {
   // Trigger refetch when page changes
   useEffect(() => {
     refetch();
-  }, [page, limit]);
+  }, [page, limit, search]);
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error fetching data</div>;
@@ -64,9 +67,10 @@ export default function Page({ searchParams }: paramsProps) {
         <Separator />
 
         <EmployeeTable
+          setSearch={setSearch}
           setLimit={setLimit}
           setPage={setPage}
-          searchKey="country"
+          searchKey="customer"
           pageNo={page}
           columns={CustomerColumn}
           totalUsers={data?.total}

@@ -41,8 +41,8 @@ export const columns: ColumnDef<User>[] = [
     header: "ADDRESS",
   },
   {
-    accessorKey: "type_of_service_provided",
-    header: "TYPE",
+    accessorKey: "experience_in_years",
+    header: "EXPERIENCE",
   },
   // {
   //   accessorKey: "licence",
@@ -56,22 +56,6 @@ export const columns: ColumnDef<User>[] = [
   //   accessorKey: "workingHoursStartTime",
   //   header: "START TIME",
   // },
-  {
-    accessorKey: "profilePic",
-    header: "PROFILE PIC",
-  },
-  {
-    accessorKey: "languagesSpeak",
-    header: "LANGUAGES",
-  },
-  {
-    accessorKey: "latitude",
-    header: "LATITUDE",
-  },
-  {
-    accessorKey: "longitude",
-    header: "LONGITUDE",
-  },
   {
     id: "actions",
     cell: ({ row }) => <CellAction data={row.original} />,
